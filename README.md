@@ -6,15 +6,15 @@
 ## Questionários
 
 * Para auxiliar no desenvolvimento e ter novos insights sobre necessidades de usuários reais questionários do Google Form serão compartilhados em alguns grupos, esboços das questões no link abaixo:
-  * [Questionários](https://github.com/darthHunterous/mac0499/questionarios.md)
+  * [Questionários](https://github.com/darthHunterous/mac0499/blob/main/questionarios.md)
 
 ## Resumos de Papers lidos
 
 * Uma boa fonte é a conferência [ISMIR](https://www.ismir.net/)
 * No arquivo `.md` abaixo serão mantidos resumos dos artigos lidos que envolvam sistemas de recomendações focados em metadados de músicas
-  * [Resumos](https://github.com/darthHunterous/mac0499/resumos-ismir.md)
+  * [Resumos](https://github.com/darthHunterous/mac0499/blob/main/resumos-ismir.md)
 
 ## Cronograma
 
-* Disponível [aqui](https://github.com/darthHunterous/mac0499/cronograma.md)
+* Disponível [aqui](https://github.com/darthHunterous/mac0499/blob/main/cronograma.md)
 * O arquivo de cronograma tanto irá planejar o cronograma mês a mês (conforme requerido pela proposta que deve ser entregue até o final de Maio) quanto irá servir como um registro do que foi trabalhado semana a semana pensando na escrita da monografia
