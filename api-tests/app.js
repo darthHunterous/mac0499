@@ -101,3 +101,42 @@ app.get("/spotify/track/:id", (req, res) => {
   const { id } = req.params;
   res.render("spotify/trackWidget.ejs", { id });
 });
+
+app.get("/spotify/album", (req, res) => {
+  res.render("spotify/album", { data: app.get("albumData") });
+});
+
+app.post("/spotify/album", async (req, res) => {
+  try {
+    const response = await axios({
+      method: "get",
+      url: "https://api.spotify.com/v1/search",
+      headers: {
+        Authorization: `Bearer ${spotifyToken}`,
+      },
+      params: {
+        q: req.body.albumName,
+        type: "album",
+      },
+      json: true,
+    });
+
+    const albums = response.data.albums.items;
+    const result = albums.map(({ id, name, artists }) => ({
+      id,
+      name,
+      artists,
+    }));
+
+    app.set("albumData", result);
+  } catch (error) {
+    console.log(error);
+  }
+
+  res.redirect("/spotify/album");
+});
+
+app.get("/spotify/album/:id", (req, res) => {
+  const { id } = req.params;
+  res.render("spotify/albumWidget.ejs", { id });
+});

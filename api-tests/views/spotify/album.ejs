@@ -1,0 +1,22 @@
+<h1>Album Widget Playback</h1>
+
+<p>Search for a music album:</p>
+<form action="/spotify/album" method="POST">
+  <label for="albumName">Album Title</label>
+  <input type="text" name="albumName" id="albumName">
+  <button>Submit</button>
+</form>
+
+<a href="/spotify">Back</a>
+<a href="/">Home</a>
+
+<% if (data) { %>
+<h2>Albums Found</h2>
+
+<ul>
+  <% for (let album of data) { %>
+  <li><a href="/spotify/album/<%= album.id %>"><%= album.name %> - <b><%= album.artists[0].name %></b></a></li>
+  <% } %>
+</ul>
+
+<% } %>
