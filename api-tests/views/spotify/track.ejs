@@ -2,7 +2,21 @@
 
 <p>Search for a track title:</p>
 <form action="/spotify/track" method="POST">
-  <label for="trackName"></label>
+  <label for="trackName">Track Title</label>
   <input type="text" name="trackName" id="trackName">
   <button>Submit</button>
 </form>
+
+<a href="/spotify">Back</a>
+<a href="/">Home</a>
+
+<% if (data) { %>
+<h2>Songs Found</h2>
+
+<ul>
+  <% for (let song of data) { %>
+  <li><a href="/spotify/track/<%= song.id %>"><%= song.name %> - <b><%= song.artists[0].name %></b></a></li>
+  <% } %>
+</ul>
+
+<% } %>

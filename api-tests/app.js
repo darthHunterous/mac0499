@@ -64,9 +64,40 @@ app.get("/spotify", async (req, res) => {
 });
 
 app.get("/spotify/track", (req, res) => {
-  res.render("spotify/track");
+  res.render("spotify/track", { data: app.get("trackData") });
 });
 
-app.post("/spotify/track", (req, res) => {
-  console.log(req.body.trackName);
+app.post("/spotify/track", async (req, res) => {
+  try {
+    const response = await axios({
+      method: "get",
+      url: "https://api.spotify.com/v1/search",
+      headers: {
+        Authorization: `Bearer ${spotifyToken}`,
+      },
+      params: {
+        q: req.body.trackName,
+        type: "track",
+      },
+      json: true,
+    });
+
+    const tracks = response.data.tracks.items;
+    const result = tracks.map(({ id, name, artists }) => ({
+      id,
+      name,
+      artists,
+    }));
+
+    app.set("trackData", result);
+  } catch (error) {
+    console.log(error);
+  }
+
+  res.redirect("/spotify/track");
+});
+
+app.get("/spotify/track/:id", (req, res) => {
+  const { id } = req.params;
+  res.render("spotify/trackWidget.ejs", { id });
 });
