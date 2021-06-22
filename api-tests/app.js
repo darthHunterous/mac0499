@@ -3,6 +3,10 @@ const ejsMate = require("ejs-mate");
 const path = require("path");
 const https = require("https");
 const axios = require("axios");
+const jsdom = require("jsdom");
+const { JSDOM } = jsdom;
+
+const cheerio = require("cheerio");
 const { encode } = require("punycode");
 
 const app = express();
@@ -24,8 +28,8 @@ app.get("/", (req, res) => {
 });
 
 function encodeAuth64() {
-  const clientId = process.env.CLIENT_ID;
-  const secretId = process.env.CLIENT_SECRET;
+  const clientId = process.env.SPOTIFY_CLIENT_ID;
+  const secretId = process.env.SPOTIFY_CLIENT_SECRET;
 
   const authUnencoded = `${clientId}:${secretId}`;
   const authBase64 = Buffer.from(authUnencoded).toString("base64");
@@ -189,4 +193,45 @@ app.post("/youtube", async (req, res) => {
 app.get("/youtube/video/:id", (req, res) => {
   const { id } = req.params;
   res.render("youtube/video", { id });
+});
+
+app.get("/soundcloud", (req, res) => {
+  res.render("soundcloud/search", { data: app.get("soundcloudData") });
+});
+
+app.post("/soundcloud", async (req, res) => {
+  try {
+    const response = await axios({
+      method: "get",
+      url: "https://soundcloud.com/search/sounds",
+      params: {
+        q: req.body.trackName,
+      },
+    });
+
+    const dom = new JSDOM(response.data);
+
+    const songElements = dom.window.document.querySelectorAll(
+      "noscript ul li h2 a"
+    );
+
+    const data = [];
+    for (let element of songElements) {
+      const title = element.textContent;
+      const href = element.href;
+
+      data.push({ title, href });
+    }
+
+    app.set("soundcloudData", data);
+  } catch (error) {
+    console.log(error);
+  }
+
+  res.redirect("/soundcloud");
+});
+
+app.get("/soundcloud/:artist/:song", (req, res) => {
+  const { artist, song } = req.params;
+  res.render("soundcloud/widget", { artist, song });
 });
