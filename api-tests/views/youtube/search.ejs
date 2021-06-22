@@ -1,0 +1,20 @@
+<h1>Youtube iFrame Playback</h1>
+
+<p>Search for a track title:</p>
+<form action="/youtube" method="POST">
+  <label for="trackName">Track Title</label>
+  <input type="text" name="trackName" id="trackName">
+  <button>Submit</button>
+</form>
+
+<a href="/">Home</a>
+
+<% if (data) { %>
+<h2>Songs Found</h2>
+
+<ul>
+  <% for (let { videoId, title} of data) { %>
+  <li><a href="/youtube/video/<%= videoId %>"><%- title %></a></li>
+  <% } %>
+</ul>
+<% } %>

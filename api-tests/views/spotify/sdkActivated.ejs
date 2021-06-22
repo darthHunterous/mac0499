@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Spotify Web Playback SDK Quick Start Tutorial</title>
+</head>
+
+<body>
+  <h1>Wait for Player to load with new instructions</h1>
+
+
+  <div id="loaded" style="display: none;">
+    <ol>
+      <li>Player has loaded correctly</li>
+      <li>Go to an official Spotify app and play any song on "Spotunes" device</li>
+      <li>Player commands will appear on this screen</li>
+    </ol>
+    <button>Play/Pause</button>
+  </div>
+
+  <div id="not-loaded" style="display: none;">
+    <ol>
+      <li>Player didn't load, check your token and try again</li>
+    </ol>
+  </div>
+
+
+  <a href="/spotify/sdk">Back</a>
+  <a href="/">Home</a>
+
+  <script src="https://sdk.scdn.co/spotify-player.js"></script>
+  <script>
+    window.onSpotifyWebPlaybackSDKReady = () => {
+      const token = "<%= token %>";
+      const player = new Spotify.Player({
+        name: 'Spotunes',
+        getOAuthToken: cb => {
+          cb(token);
+        }
+      });
+
+      // Error handling
+      const errorDiv = document.querySelector("#not-loaded");
+
+      player.addListener('initialization_error', ({
+        message
+      }) => {
+        console.error(message);
+        errorDiv.style.display = "";
+      });
+      player.addListener('authentication_error', ({
+        message
+      }) => {
+        console.error(message);
+        errorDiv.style.display = "";
+      });
+      player.addListener('account_error', ({
+        message
+      }) => {
+        console.error(message);
+        errorDiv.style.display = "";
+      });
+      player.addListener('playback_error', ({
+        message
+      }) => {
+        console.error(message);
+        errorDiv.style.display = "";
+      });
+
+      // Playback status updates
+      player.addListener('player_state_changed', state => {
+        console.log(state);
+      });
+
+      // Ready
+      player.addListener('ready', ({
+        device_id
+      }) => {
+        console.log('Ready with Device ID', device_id);
+        const successDiv = document.querySelector("#loaded");
+        successDiv.style.display = "";
+      });
+
+      // Not Ready
+      player.addListener('not_ready', ({
+        device_id
+      }) => {
+        console.log('Device ID has gone offline', device_id);
+      });
+
+      player.connect();
+
+      const playButton = document.querySelector("#loaded button");
+      playButton.addEventListener("click", () => {
+        console.log(player.togglePlay());
+      });
+    };
+  </script>
+</body>
+
+</html>

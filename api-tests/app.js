@@ -3,7 +3,6 @@ const ejsMate = require("ejs-mate");
 const path = require("path");
 const https = require("https");
 const axios = require("axios");
-// const request = require("request");
 const { encode } = require("punycode");
 
 const app = express();
@@ -139,4 +138,55 @@ app.post("/spotify/album", async (req, res) => {
 app.get("/spotify/album/:id", (req, res) => {
   const { id } = req.params;
   res.render("spotify/albumWidget.ejs", { id });
+});
+
+app.get("/spotify/sdk", (req, res) => {
+  res.render("spotify/sdk.ejs");
+});
+
+app.get("/spotify/sdk/activated", (req, res) => {
+  const { token } = req.query;
+
+  res.render("spotify/sdkActivated", { token });
+});
+
+app.get("/youtube", (req, res) => {
+  res.render("youtube/search", { data: app.get("youtubeData") });
+});
+
+app.post("/youtube", async (req, res) => {
+  try {
+    const youtubeKey = process.env.YOUTUBE_KEY;
+
+    const response = await axios({
+      method: "get",
+      url: "https://www.googleapis.com/youtube/v3/search",
+      params: {
+        q: req.body.trackName,
+        key: youtubeKey,
+        part: "snippet",
+        maxResults: 10,
+        type: "video",
+      },
+      json: true,
+    });
+
+    const videos = response.data.items;
+
+    const result = videos.map(({ id, snippet }) => ({
+      videoId: id.videoId,
+      title: snippet.title,
+    }));
+
+    app.set("youtubeData", result);
+  } catch (error) {
+    console.log(error);
+  }
+
+  res.redirect("/youtube");
+});
+
+app.get("/youtube/video/:id", (req, res) => {
+  const { id } = req.params;
+  res.render("youtube/video", { id });
 });
