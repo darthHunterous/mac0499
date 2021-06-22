@@ -23,3 +23,13 @@
 * Carregar um vídeo é simples e pode ser feito com iframe, apenas configurando a ID do vídeo no link do iframe ou carregando o iframe em um elemento HTML através da API
 * Porém, há uma limitação de não poder deixar os vídeos em fullscreen, pesquisar como resolver
 
+# Soundcloud
+
+* Também possui um SDK: https://developers.soundcloud.com/docs/api/sdks
+  * Esbarra nas mesmas questões de praticidade da SDK do Spotify
+  * Considerando que os termos de uso da API do Soundcloud requerem identificação com logomarca, nome do usuário, arte de capa, etc é mais prático usar o widget
+* Para usar a API de busca https://developers.soundcloud.com/docs/api/guide#search
+  * Necessário uma chave do cliente
+* SoundCloud não está mais liberando chaves para API por causa da alta demanda
+  * Tentar solucionar isso parseando o HTML da página web mesmo e passando a URL obtida para o iframe
+
