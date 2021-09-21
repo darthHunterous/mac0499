@@ -18,3 +18,4 @@
 
 * Disponível [aqui](https://github.com/darthHunterous/mac0499/blob/main/cronograma.md)
 * O arquivo de cronograma tanto irá planejar o cronograma mês a mês (conforme requerido pela proposta que deve ser entregue até o final de Maio) quanto irá servir como um registro do que foi trabalhado semana a semana pensando na escrita da monografia
+
