@@ -27,3 +27,14 @@
 - Gastei tempo tentando criar várias Rows no modal que mostra o resultado da pesquisa, onde cada row teria 2 elementos mostrados, porém bastava criar apenas uma Row geral, e ir colocando vários elementos com "col-md-6" dentro. Tentei até mesmo reformatar o array com 10 itens em grupos de 2 elementos por array
 - Reestruturação dos objetos recebidos pelo front (mais atributos mostrados na busca)
 - Adição de novas músicas à biblioteca clicando no botão
+- https://medium.com/reprogramabr/consumindo-a-api-do-spotify-um-breve-passo-a-passo-fd210312fdd
+
+## 22/09: Deploy do back-end para o Heroku, integrar front em production (Netlify) com back-end
+
+- Preparação das portas com process.env.PORT
+- Várias dificuldades para integrar o back-end em produção por conta das especificadas de variáveis de ambiente
+- cross-env só funciona em modo dev
+- Dificuldades para setar o ambiente de dev com create-react-app
+  - É necessário a lib env-cmd e um .env.development
+- Após setar os ambientes de dev e production tanto no front quanto no dev ainda enfrentando erros de CORS, pode ser algo especificado errado no header de allow lá no back end
+- O problema de CORS era um trailing '/' no final de https://spotunes.netlify.app/ (vem automaticamente ao copiar da URL do navegador)
