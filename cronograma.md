@@ -18,7 +18,7 @@
 - Esboço de algumas telas no Figma
   - https://www.figma.com/file/v0aTcp8ozSLX53JhDiIo6Z/Spotunes-Wireframe
 
-## Sprint de 21/09: Enfoque nas funcionalidades de busca e adição na biblioteca
+## Sprint para 22/09: Enfoque nas funcionalidades de busca e adição na biblioteca
 
 - A tentativa de manter o Spotunes minimamente dependente de um back-end (ao menos inicialmente) não funcionou por conta da autenticação do Spotify
 - Mesmo que a biblioteca npm node-spotify-api abstraia vários processos do fluxo de autenticação, ainda assim é necessário um servidor Node para lidar com os tokens
@@ -29,7 +29,7 @@
 - Adição de novas músicas à biblioteca clicando no botão
 - https://medium.com/reprogramabr/consumindo-a-api-do-spotify-um-breve-passo-a-passo-fd210312fdd
 
-## 22/09: Deploy do back-end para o Heroku, integrar front em production (Netlify) com back-end
+## Sprint para 06/10: Deploy do back-end para o Heroku, integrar front em production (Netlify) com back-end
 
 - Preparação das portas com process.env.PORT
 - Várias dificuldades para integrar o back-end em produção por conta das especificadas de variáveis de ambiente
@@ -38,3 +38,20 @@
   - É necessário a lib env-cmd e um .env.development
 - Após setar os ambientes de dev e production tanto no front quanto no dev ainda enfrentando erros de CORS, pode ser algo especificado errado no header de allow lá no back end
 - O problema de CORS era um trailing '/' no final de https://spotunes.netlify.app/ (vem automaticamente ao copiar da URL do navegador)
+
+## Sprint para 06/10: cuidado com scripts do package.json
+
+- O comando errôneo `npm start development` acabava por executar o script de production, deixando a NODE_ENV undefined quando o esperado era development. O script correto que resolve isso é `npm run development`
+
+## Sprint para 06/10: modularização de código
+
+- Alteração do curso ao fazer hover sobre a tabela para indicar que é clicável
+- Transformação da tabela de música em um componente
+- Transformação do iframe em um componente, permitindo também renderizar um placeholder ao inicializar a aplicação
+  - Troca do tema para escuro tornou a identidadade visual mais coesa
+- Configuração do favicon e do título do site
+- Troca da paleta de cores para variante dark
+- Alteração de padding no título dos list groups em preparação para sua componentização
+- Ao alterar a cor do botão de Search, foi notado que tentar buscar com campo de busca vazio batia no servidor do back-end, quebrando-o. Necessidade de consertar esse bug na duas frentes (no front-end, não fazer request com campo vazio e no back-end lançar um erro ao invés de quebrar o servidor inteiro)
+- Tive problema de merge para a main do front-end pois fiz alterações na master que eram necessárias à branch de development também para subir este ambiente corretamente
+- Alterei o back-end que ao receber o title faltante na rota de search no Spotify, retorna uma resposta com status 422 (Unprocessable Entity), informando do parâmetro faltante
