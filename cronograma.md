@@ -55,3 +55,25 @@
 - Ao alterar a cor do botão de Search, foi notado que tentar buscar com campo de busca vazio batia no servidor do back-end, quebrando-o. Necessidade de consertar esse bug na duas frentes (no front-end, não fazer request com campo vazio e no back-end lançar um erro ao invés de quebrar o servidor inteiro)
 - Tive problema de merge para a main do front-end pois fiz alterações na master que eram necessárias à branch de development também para subir este ambiente corretamente
 - Alterei o back-end que ao receber o title faltante na rota de search no Spotify, retorna uma resposta com status 422 (Unprocessable Entity), informando do parâmetro faltante
+- Modularização dos ListGroups em componentes que representam uma seção que recebe o título e um array com os itens a serem mostrados
+- Controles do player e slider movidos para um componente separado também
+- Modularização do formulário de busca junto com a função correspondente que lida com a busca
+- Modularização do modal de busca junto à função de adicionar na biblioteca
+
+# Sprint 06/10: Adição de bordas
+
+- Adição de bordas entre as seções do design para facilitar visualização, antes a divisão não aparentava estar clara
+
+# Sprint 06/10: Persistência dos dados da biblioteca
+
+- Remoção do carregamento inicial da músicas presentes no data.json
+- Agora como a biblioteca inicia vazia, mostra-se um alert warning indicando que a biblioteca está vazia e o usuário deve inserir novas músicas
+- O counter do footer mostra quantos itens tem na biblioteca atualmente e a duração total das músicas ali presentes
+- Para persistir os dados, por enquanto salvaremos no localstorage o estado da biblioteca (songData), toda vez que ele for alterado.
+  - Tentei fazer isso dentro da função addToLibrary presente no componente do Modal, mas como setState é async, não bastava colocar dentro da função o setItem do localstorage. Para resolver isso poderia se utilizar um callback do setState, que existia antes do setState ser um hook. Agora, como setState é um hook e não se lida com o state do component como função mais, a forma correta é configurar um useEffect na tela principal mesmo, passando como variável a ser verificada o songData, assim toda vez que songData for alterado, useEfect irá disparar a função anônima que consiste no setItem do localstorage.
+- Para carregar os dados salvos no localstorage, pode-se usar o mesmo que foi feito com o data.json inicialmente:
+  - Criar uma função loadSongData que pega a informação em string do localstorage e parseia para JSON
+  - Usar o useEffect com variável vazia ([]) pois assim irá ser executado assim que a aplicação React carregar
+- Deletar data.json pois não é necessário mais como placeholder
+- Ao tentar dar deploy no Netlify, notei um bug: como o songData não existe no localstorage inicialmente, ao tentar carregá-lo o site quebra pois songData é setado com o valor null. Um segundo reload passa a funcionar pois acaba sendo setado como vazio por possuir o null
+  - Resolver isso verificando o que é pego no getItem do localstorage, setando como JSON caso existir algo lá, senão array vazio
