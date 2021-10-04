@@ -77,3 +77,25 @@
 - Deletar data.json pois não é necessário mais como placeholder
 - Ao tentar dar deploy no Netlify, notei um bug: como o songData não existe no localstorage inicialmente, ao tentar carregá-lo o site quebra pois songData é setado com o valor null. Um segundo reload passa a funcionar pois acaba sendo setado como vazio por possuir o null
   - Resolver isso verificando o que é pego no getItem do localstorage, setando como JSON caso existir algo lá, senão array vazio
+
+## Sprint 06/10: contagem de reprodução de músicas
+
+- Problema detectado: por segurança iframes não permitem o uso de listeners
+- Isso impede que seja monitorado o número de reproduções por click no iframe do spotify
+- Será necessário uma gambiarra do tipo presente aqui https://stackoverflow.com/questions/2381336/detect-click-into-iframe-using-javascript/32138108#32138108
+- Exemplo que funciona para detectar o foco em um iframe, removendo o foco logo em seguida com blur() para ser possível monitorar um eventual novo clique
+  ```
+  var monitor = setInterval(function(){
+    var elem = document.activeElement;
+    if(elem && elem.tagName == 'IFRAME'){
+        document.activeElement.blur();
+        console.log('hey');
+    }
+  }, 100);
+  ```
+
+## Sprint 06/10: adição à playlists
+
+- Por padrão o Spotunes carrega 5 playlists inteligentes já pré-concebidas (Most played, recently added, recently modified, never played e best rated), para servirem de exemplos
+- Adição de um botão em cada linha da tabela para adicionar uma música à playlist
+- https://stackoverflow.com/questions/55968689/how-can-i-use-checkbox-form-in-react
