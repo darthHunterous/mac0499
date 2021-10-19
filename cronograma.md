@@ -99,3 +99,35 @@
 - Por padrão o Spotunes carrega 5 playlists inteligentes já pré-concebidas (Most played, recently added, recently modified, never played e best rated), para servirem de exemplos
 - Adição de um botão em cada linha da tabela para adicionar uma música à playlist
 - https://stackoverflow.com/questions/55968689/how-can-i-use-checkbox-form-in-react
+  - Link que mostra como podemos submeter uma checkbox de forma bem estrutura em React
+- Ao dar submit no form dos checkboxes, temos que percorrer todo os pares chave-valor do array de estados para saber quais playlists foram marcadas. Ao encontrar uma que foi marcada, precisamos percorrer o array de playlists, adicionando na lista de músicas correspondente
+  - Uma solução simples, porém um pouco ineficiente, melhor adiconar um array e só passar o id das playlists modificadas. Também outra implementação melhor é usar o id como chave de um objeto que guarde as playlists, reduzindo o tempo de busca. Portanto fica como TODO
+- Por enquanto as músicas são identificadas pelo ID do spotify, mas o ideal seria ter um uuid mesmo pois poderemos ter músicas de outras fontes
+
+## Sprint 06/10: ajustes das rotas de Playlist
+
+- Para cada playlist clicada, queremos mostrar apenas o resultado filtrado
+- Usar routes do React para isso, passando os dados filtrados
+  - Rotas podem ser do tipo /playlist/:id
+- Passar um array com as rotas referentes para o ListGroupSection component  
+
+## Sprint 06/10: Correção do nodemon no back-end
+- O nodemon não estava adicionado corretamente como dependência de desenvolvimento (npm install nodemon --save-dev). Isso é importante para garantir que o ambiente execute corretamente com o mínimo de setup possível. Anteriormente, como ele estava instalado globalmente na minha máquina, clonar o repositório e instalar dependências com npm install não tornaria o servidor facil de por em operação
+
+## Sprint 18/10: tornar rotas funcionais, filtrando conteúdo
+- Usar react-router-dom
+- Usar o hook do react-router-dom useLocation().pathname para identificar em que rotas estamos, assim dá para definir o elemento ativo nos ListGroups nas laterais
+- Um problema encontrado foi que ao clicar em algum ListGroupItem, a página está sendo recarregada (como React usa SPA isso é uma prática ruim pois recarrega conteúdo que não deveria). Aparentemente, substituir os hrefs de cada ListGroupItem, colocando ao redor de uma tag Link conserta isso
+- Colocar o Link ao redor do ListGroupItem quebra a funcionalidade do componente e a estilização, tentar consertar isso com a biblioteca react-router-boostrap, adicionada através do Yarn
+- Usar o LinkContainer do react-router-bootstrap ao invés do Link do react-router resolve o problema do reload, com a página se comportando corretamente como SPA, porém o campo selecionado do ListGroup se torna extremamente bugado, vou testar se dá para deixar com reload mesmo
+- Não é possível deixar com o comportamento de reload, pois isso resetaria o playback da música no iframe. Consertei o problema na base da gambiarra: alterando o CSS com javascript ao efetuar um clique em um elemento dos list groups, resetando o css dos ativos para o padrão e ativado o clicado. Agora a funcionalidade está a contento
+
+## Spring 18/10: decisão de separar deploy do front e do back
+- O front está no Netlify e o back no Heroku, como o Netlify lida melhor com páginas estáticas, estando sempre à disposição, é melhor deixar separados pois o back só será ativado esporadicamente ao efetuar uma busca. O Heroku tem um tempo para acordar o dyno
+
+TODO: consertar bug de ser capaz de adicionar músicas repetidas
+TODO: fechar modal depois de adicionar uma música
+TODO: adicionar uuid a playlists e músicas
+
+TODO: finalizar tudo que já tem na interface (criar playlists, playlists inteligentes, informações da barra lateral direita)
+TODO: fazer um readme de como fazer deploy no heroku
