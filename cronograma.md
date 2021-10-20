@@ -121,8 +121,11 @@
 - Colocar o Link ao redor do ListGroupItem quebra a funcionalidade do componente e a estilização, tentar consertar isso com a biblioteca react-router-boostrap, adicionada através do Yarn
 - Usar o LinkContainer do react-router-bootstrap ao invés do Link do react-router resolve o problema do reload, com a página se comportando corretamente como SPA, porém o campo selecionado do ListGroup se torna extremamente bugado, vou testar se dá para deixar com reload mesmo
 - Não é possível deixar com o comportamento de reload, pois isso resetaria o playback da música no iframe. Consertei o problema na base da gambiarra: alterando o CSS com javascript ao efetuar um clique em um elemento dos list groups, resetando o css dos ativos para o padrão e ativado o clicado. Agora a funcionalidade está a contento
+- Remover dependências não utilizadas do componente ListGroupSection, pois não é uma boa prática deixá-las, gerando warnings
+- Faltou adicionar o hover nos elementos dos ListsGroups. Quando o usuário estiver para clicar em outra seção, convém escurecer o pouco onde o mouse está atualmente para dar um feedback visual que o usuário está escolhendo a rota correta. Como em React não tem onHover, emulado com onMouseEnter e onMouseLeave
+- Adição do filtro, passando para o componente SongTable apenas as músicas adequadas para exibição naquela rota. Para isso, filtra quando nota uma alteração na variável current_path através do useEffect. current_path é obtido pelo useLocation do react-router-dom
 
-## Spring 18/10: decisão de separar deploy do front e do back
+## Sprint 18/10: decisão de separar deploy do front e do back
 - O front está no Netlify e o back no Heroku, como o Netlify lida melhor com páginas estáticas, estando sempre à disposição, é melhor deixar separados pois o back só será ativado esporadicamente ao efetuar uma busca. O Heroku tem um tempo para acordar o dyno
 
 TODO: consertar bug de ser capaz de adicionar músicas repetidas
@@ -131,3 +134,5 @@ TODO: adicionar uuid a playlists e músicas
 
 TODO: finalizar tudo que já tem na interface (criar playlists, playlists inteligentes, informações da barra lateral direita)
 TODO: fazer um readme de como fazer deploy no heroku
+
+TODO: faltou o highlight ao fazer hover com o mouse
