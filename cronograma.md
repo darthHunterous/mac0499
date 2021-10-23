@@ -124,9 +124,51 @@
 - Remover dependências não utilizadas do componente ListGroupSection, pois não é uma boa prática deixá-las, gerando warnings
 - Faltou adicionar o hover nos elementos dos ListsGroups. Quando o usuário estiver para clicar em outra seção, convém escurecer o pouco onde o mouse está atualmente para dar um feedback visual que o usuário está escolhendo a rota correta. Como em React não tem onHover, emulado com onMouseEnter e onMouseLeave
 - Adição do filtro, passando para o componente SongTable apenas as músicas adequadas para exibição naquela rota. Para isso, filtra quando nota uma alteração na variável current_path através do useEffect. current_path é obtido pelo useLocation do react-router-dom
+- Alteração do footer para usar o conteúdo filtrado, mostrando quantidade de músicas e duração apenas das músicas apresentadas na rota atual
 
 ## Sprint 18/10: decisão de separar deploy do front e do back
 - O front está no Netlify e o back no Heroku, como o Netlify lida melhor com páginas estáticas, estando sempre à disposição, é melhor deixar separados pois o back só será ativado esporadicamente ao efetuar uma busca. O Heroku tem um tempo para acordar o dyno
+
+## Sprint 18/10: adição do Nodemon como dev dependency
+- Nodemon instalado no spotunes-server como dependência de desenvolvimento, tornando-o pronto para ser utilizado assim que o repositório seja clonado
+
+## Spring 18/10: pequenas refatorações
+- Remoção da funcionalidade "Recently added" como playlist, deixando apenas como função da Library mesmo, pois estava duplicado
+- Remoção da funcionalidade da Library "Videos", serão adicionados mais tarde se houver tempo
+
+## Sprint 18/10: rota de Albums
+- Ao clicar em Albums, o usuário tem listado todos os álbuns em sua coleção, com imagem de capa, nome do artista e nome do álbum
+- Código na Home para filtrar álbuns (sem repetições), enviando as informações necessárias para o componente AlbumsList (id do álbum, link para a imagem de capa, nome do álbum e nome do artista)
+
+## Sprint 18/10: rota de um álbum específico
+- Envolver o botão em /albums com o LinkContainer para evitar refresh do SPA
+- Ao clicar no botão, carrega a Song Table com apenas as músicas do álbum atual filtradas e ordenadas por ordem alfabética
+
+## Sprint 18/10: conserto do bug da /all na primeira carregada
+- Antes estava sendo passado o filteredSongData para a SongTable, porém ao abrir o app, não há nada filtrado ainda. Solução com um ternário que checa se a rota atual é a /all, mostrando todas as músicas em caso positivo (songData ao invés de filteredSongData)
+
+## Sprint 18/10: conserto do bug de mostrar álbums duplicados na lista de álbums
+- Erro se dava pela alteração para um array de objetos, foi consertado com o método some para checar se já há algum objeto no array de albuns únicos que já possui o ID em questão, adicionando apenas em caso negativo
+
+## Sprint 18/10: componente Artist List
+- Lista todos os artistas presentes na biblioteca em ordem alfabética, podendo filtrar todas suas músicas com um clique
+
+## Sprint 18/10: filtro específico de artista
+- Rota /artist/:id
+- Consertado typo no botão da lista de artistas, que redirecionava para albums/:id
+
+## Sprint 18/10: listar todos os gêneros
+- Na API do spotify, só é possível obter gêneros musicais a partir do artista e não de músicas específicas em si
+- Portanto foi necessário alterar o back-end para fornecer a capacidade de pesquisar por artista também, retornando os gêneros, ID e URL da imagem para cada artista
+- Ao clicar em adicionar na playlist após a busca de uma música, irá fazer uma nova requisição pelos dados do artista, adicionando no songData os novos dados buscados
+- Lista implementada com base nos designs análogos de ArtistsList e AlbumsList
+- Para melhorar a visualização dos gêneros foi implementado um método para capitalizar (primeira letra de cada palavra sendo maiúscula) a string que representa o gênero. Javascript não fornece algo do tipo como padrão, ao contrário de outras linguagens.
+- Como os gêneros não precisam de uma ID para identificação (basta seu próprio nome como string), eles podem ser usados diretamente nas rotas, apenas substituindo whitespace por um traço para facilitar a leitura da URL e evitar caracteres especiais
+
+## Sprint 27/10: adicionar imagem do artista na lista
+- Com a adição do fetch na API do Spotify por informações do artista, foi possível adicionar também uma thumbnail para cada artista, melhorando o visual da lista de artista. Seria interessante fazer algo do tipo para gênero, cogitei uma api que gerasse Word Art mas não encontrei, pode ser possível com a biblioteca
+react-wordart do npm
+https://www.npmjs.com/package/react-wordart
 
 TODO: consertar bug de ser capaz de adicionar músicas repetidas
 TODO: fechar modal depois de adicionar uma música
@@ -135,4 +177,11 @@ TODO: adicionar uuid a playlists e músicas
 TODO: finalizar tudo que já tem na interface (criar playlists, playlists inteligentes, informações da barra lateral direita)
 TODO: fazer um readme de como fazer deploy no heroku
 
-TODO: faltou o highlight ao fazer hover com o mouse
+TODO: adicionar /videos ao ListGroup Library novamente
+TODO: consertar reload, que sempre acaba marcando all songs junto com o path atual
+
+TODO: adicionar número da música no álbum para ordenar (track_number na API do Spotify)
+TODO: limitação da biblioteca node-spotify-api: não é possível especificar um mercado para os álbums, assim podem haver repetidos, como o Enema of The State do Blink-182 usado nos testes
+
+TODO: reorganizar os dados enviados pelo back-end por uma estrutura lógica
+TODO: thumbnail dos gêneros com uma API de imagem 640x640 coloridas com wordart do react-wordart
