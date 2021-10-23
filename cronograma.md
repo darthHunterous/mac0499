@@ -170,6 +170,19 @@
 react-wordart do npm
 https://www.npmjs.com/package/react-wordart
 
+## Sprint 27/10: arrumar informações do footer
+- O footer agora mostrar a quantidade de músicas na seleção de músicas atuais (bem como a duração delas) ou no caso de uma lista de artistas, álbums ou gêneros, mostra a quantidade listada
+- Consertado também uma comparação errada nos ternários de renderização da informação no footer, estava sendo utilizado apenas != ao invés de !==
+
+## Sprint 27/10: músicas recentemente adicionadas
+- Para poder listar as músicas recentemente adicionadas (atribuídas como aquelas adicionadas nas últimas 24 horas), foi preciso adicionar um campo de "createdAt" ao adicioná-las na biblioteca. Pensando em funcionalidades futuras, faz sentido um campo "modifiedAt" também, ambos configurados para o mesmo horário na adição
+- Ao usar new Date(), quando salvamos em JSON no localStorage, a data acaba sendo armazenada como string, isto traz um bug ao recarregar o Spotunes, pois com a formatação como string torna-se impossível comparar diretamente com uma subtração para ver se foi adicionada há menos de 24 horas
+- Uma boa solução para o problema acima foi salvar a data com o valueOf(), que retorna o tempo passado da data atual desde 01/01/1970 em milissegundos. Assim fica fácil calcular se a música foi adiciona em menos de 24h, sendo salvo no localStorage e recuperado sem grandes alterações
+
+## Sprint 27/10: contagem de reproduções
+- Para ser capaz de fornecer uma playlist inteligente que liste as músicas mais tocadas da biblioteca é necessário salvar a contagem de reproduções para cada música.
+- Como não há maneira de interagir com o iframe do Spotify oficialmente, um workaround empregado foi se o elemento HTML em foco na página (clicado pelo usuário) é um iframe. Em caso positivo, sabemos que o usuário clicou no iframe para iniciar sua reprodução. Assim aumentamos o playCount da música em questão. Porém, não queremos que tal comportamento ocorra a cada clique (senão cliques subsequentes na mesma música para pausar e resumir contariam como reproduções separadas). Para resolver isso, uma boa forma é usar uma variável booleana de controle que seja iniciada como falsa ao carregar um novo iframe de uma nova música. Ao ser clicado pela primeira vez, essa variável se torna verdadeira e server como sentinela para evitar aumentar novamente a contagem de reproduções.
+
 TODO: consertar bug de ser capaz de adicionar músicas repetidas
 TODO: fechar modal depois de adicionar uma música
 TODO: adicionar uuid a playlists e músicas
