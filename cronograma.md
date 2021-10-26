@@ -183,6 +183,11 @@ https://www.npmjs.com/package/react-wordart
 - Para ser capaz de fornecer uma playlist inteligente que liste as músicas mais tocadas da biblioteca é necessário salvar a contagem de reproduções para cada música.
 - Como não há maneira de interagir com o iframe do Spotify oficialmente, um workaround empregado foi se o elemento HTML em foco na página (clicado pelo usuário) é um iframe. Em caso positivo, sabemos que o usuário clicou no iframe para iniciar sua reprodução. Assim aumentamos o playCount da música em questão. Porém, não queremos que tal comportamento ocorra a cada clique (senão cliques subsequentes na mesma música para pausar e resumir contariam como reproduções separadas). Para resolver isso, uma boa forma é usar uma variável booleana de controle que seja iniciada como falsa ao carregar um novo iframe de uma nova música. Ao ser clicado pela primeira vez, essa variável se torna verdadeira e server como sentinela para evitar aumentar novamente a contagem de reproduções.
 
+## Sprint 27/10 - playlist inteligente "Mais tocadas"
+- Filtrar apenas as músicas que possuem ao menos uma reprodução e listar em ordem decrescente (primeiro as mais reproduzidas), convém ordenar por ordem alfabética também antes, pois como o sort do JS mantém a ordem relativa, teremos as músicas ordenadas primeiro por número de reproduções e em caso de empate, por ordem alfabética
+- Convém alterar a song table para mostrar o número de reproduções para ficar mais claro
+- De início, a playlist limita a 25 itens (25 mais tocadas)
+
 TODO: consertar bug de ser capaz de adicionar músicas repetidas
 TODO: fechar modal depois de adicionar uma música
 TODO: adicionar uuid a playlists e músicas
@@ -198,3 +203,5 @@ TODO: limitação da biblioteca node-spotify-api: não é possível especificar 
 
 TODO: reorganizar os dados enviados pelo back-end por uma estrutura lógica
 TODO: thumbnail dos gêneros com uma API de imagem 640x640 coloridas com wordart do react-wordart
+
+TODO: fix bug onde uma música de 5 min e 5segundos (The Great Gig In the Sky - Live at Knebworth 1990	) aparece como 5:5 em vez de 5:05
