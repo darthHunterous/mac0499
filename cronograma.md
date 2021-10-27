@@ -109,12 +109,14 @@
 - Para cada playlist clicada, queremos mostrar apenas o resultado filtrado
 - Usar routes do React para isso, passando os dados filtrados
   - Rotas podem ser do tipo /playlist/:id
-- Passar um array com as rotas referentes para o ListGroupSection component  
+- Passar um array com as rotas referentes para o ListGroupSection component
 
 ## Sprint 06/10: Correção do nodemon no back-end
+
 - O nodemon não estava adicionado corretamente como dependência de desenvolvimento (npm install nodemon --save-dev). Isso é importante para garantir que o ambiente execute corretamente com o mínimo de setup possível. Anteriormente, como ele estava instalado globalmente na minha máquina, clonar o repositório e instalar dependências com npm install não tornaria o servidor facil de por em operação
 
 ## Sprint 18/10: tornar rotas funcionais, filtrando conteúdo
+
 - Usar react-router-dom
 - Usar o hook do react-router-dom useLocation().pathname para identificar em que rotas estamos, assim dá para definir o elemento ativo nos ListGroups nas laterais
 - Um problema encontrado foi que ao clicar em algum ListGroupItem, a página está sendo recarregada (como React usa SPA isso é uma prática ruim pois recarrega conteúdo que não deveria). Aparentemente, substituir os hrefs de cada ListGroupItem, colocando ao redor de uma tag Link conserta isso
@@ -127,37 +129,47 @@
 - Alteração do footer para usar o conteúdo filtrado, mostrando quantidade de músicas e duração apenas das músicas apresentadas na rota atual
 
 ## Sprint 18/10: decisão de separar deploy do front e do back
+
 - O front está no Netlify e o back no Heroku, como o Netlify lida melhor com páginas estáticas, estando sempre à disposição, é melhor deixar separados pois o back só será ativado esporadicamente ao efetuar uma busca. O Heroku tem um tempo para acordar o dyno
 
 ## Sprint 18/10: adição do Nodemon como dev dependency
+
 - Nodemon instalado no spotunes-server como dependência de desenvolvimento, tornando-o pronto para ser utilizado assim que o repositório seja clonado
 
 ## Spring 18/10: pequenas refatorações
+
 - Remoção da funcionalidade "Recently added" como playlist, deixando apenas como função da Library mesmo, pois estava duplicado
 - Remoção da funcionalidade da Library "Videos", serão adicionados mais tarde se houver tempo
 
 ## Sprint 18/10: rota de Albums
+
 - Ao clicar em Albums, o usuário tem listado todos os álbuns em sua coleção, com imagem de capa, nome do artista e nome do álbum
 - Código na Home para filtrar álbuns (sem repetições), enviando as informações necessárias para o componente AlbumsList (id do álbum, link para a imagem de capa, nome do álbum e nome do artista)
 
 ## Sprint 18/10: rota de um álbum específico
+
 - Envolver o botão em /albums com o LinkContainer para evitar refresh do SPA
 - Ao clicar no botão, carrega a Song Table com apenas as músicas do álbum atual filtradas e ordenadas por ordem alfabética
 
 ## Sprint 18/10: conserto do bug da /all na primeira carregada
+
 - Antes estava sendo passado o filteredSongData para a SongTable, porém ao abrir o app, não há nada filtrado ainda. Solução com um ternário que checa se a rota atual é a /all, mostrando todas as músicas em caso positivo (songData ao invés de filteredSongData)
 
 ## Sprint 18/10: conserto do bug de mostrar álbums duplicados na lista de álbums
+
 - Erro se dava pela alteração para um array de objetos, foi consertado com o método some para checar se já há algum objeto no array de albuns únicos que já possui o ID em questão, adicionando apenas em caso negativo
 
 ## Sprint 18/10: componente Artist List
+
 - Lista todos os artistas presentes na biblioteca em ordem alfabética, podendo filtrar todas suas músicas com um clique
 
 ## Sprint 18/10: filtro específico de artista
+
 - Rota /artist/:id
 - Consertado typo no botão da lista de artistas, que redirecionava para albums/:id
 
 ## Sprint 18/10: listar todos os gêneros
+
 - Na API do spotify, só é possível obter gêneros musicais a partir do artista e não de músicas específicas em si
 - Portanto foi necessário alterar o back-end para fornecer a capacidade de pesquisar por artista também, retornando os gêneros, ID e URL da imagem para cada artista
 - Ao clicar em adicionar na playlist após a busca de uma música, irá fazer uma nova requisição pelos dados do artista, adicionando no songData os novos dados buscados
@@ -166,27 +178,58 @@
 - Como os gêneros não precisam de uma ID para identificação (basta seu próprio nome como string), eles podem ser usados diretamente nas rotas, apenas substituindo whitespace por um traço para facilitar a leitura da URL e evitar caracteres especiais
 
 ## Sprint 27/10: adicionar imagem do artista na lista
+
 - Com a adição do fetch na API do Spotify por informações do artista, foi possível adicionar também uma thumbnail para cada artista, melhorando o visual da lista de artista. Seria interessante fazer algo do tipo para gênero, cogitei uma api que gerasse Word Art mas não encontrei, pode ser possível com a biblioteca
-react-wordart do npm
-https://www.npmjs.com/package/react-wordart
+  react-wordart do npm
+  https://www.npmjs.com/package/react-wordart
 
 ## Sprint 27/10: arrumar informações do footer
+
 - O footer agora mostrar a quantidade de músicas na seleção de músicas atuais (bem como a duração delas) ou no caso de uma lista de artistas, álbums ou gêneros, mostra a quantidade listada
 - Consertado também uma comparação errada nos ternários de renderização da informação no footer, estava sendo utilizado apenas != ao invés de !==
 
 ## Sprint 27/10: músicas recentemente adicionadas
+
 - Para poder listar as músicas recentemente adicionadas (atribuídas como aquelas adicionadas nas últimas 24 horas), foi preciso adicionar um campo de "createdAt" ao adicioná-las na biblioteca. Pensando em funcionalidades futuras, faz sentido um campo "modifiedAt" também, ambos configurados para o mesmo horário na adição
 - Ao usar new Date(), quando salvamos em JSON no localStorage, a data acaba sendo armazenada como string, isto traz um bug ao recarregar o Spotunes, pois com a formatação como string torna-se impossível comparar diretamente com uma subtração para ver se foi adicionada há menos de 24 horas
 - Uma boa solução para o problema acima foi salvar a data com o valueOf(), que retorna o tempo passado da data atual desde 01/01/1970 em milissegundos. Assim fica fácil calcular se a música foi adiciona em menos de 24h, sendo salvo no localStorage e recuperado sem grandes alterações
 
 ## Sprint 27/10: contagem de reproduções
+
 - Para ser capaz de fornecer uma playlist inteligente que liste as músicas mais tocadas da biblioteca é necessário salvar a contagem de reproduções para cada música.
 - Como não há maneira de interagir com o iframe do Spotify oficialmente, um workaround empregado foi se o elemento HTML em foco na página (clicado pelo usuário) é um iframe. Em caso positivo, sabemos que o usuário clicou no iframe para iniciar sua reprodução. Assim aumentamos o playCount da música em questão. Porém, não queremos que tal comportamento ocorra a cada clique (senão cliques subsequentes na mesma música para pausar e resumir contariam como reproduções separadas). Para resolver isso, uma boa forma é usar uma variável booleana de controle que seja iniciada como falsa ao carregar um novo iframe de uma nova música. Ao ser clicado pela primeira vez, essa variável se torna verdadeira e server como sentinela para evitar aumentar novamente a contagem de reproduções.
 
 ## Sprint 27/10 - playlist inteligente "Mais tocadas"
+
 - Filtrar apenas as músicas que possuem ao menos uma reprodução e listar em ordem decrescente (primeiro as mais reproduzidas), convém ordenar por ordem alfabética também antes, pois como o sort do JS mantém a ordem relativa, teremos as músicas ordenadas primeiro por número de reproduções e em caso de empate, por ordem alfabética
 - Convém alterar a song table para mostrar o número de reproduções para ficar mais claro
 - De início, a playlist limita a 25 itens (25 mais tocadas)
+
+## Sprint 27/10 - remoção de erros e warnings
+
+- Um erro era por não encontrar um logo especificado no manifest.json. Isso era algo que ficou do template do create-react-app que foi esquecido ali. A remoção das linhas dos logos no manifest.json sumiu com o erro.
+- 3 erros referentes à key faltante na lista do SongTable, ListGroupSection e AddToPlaylistModal. Adicionar uma key (identificador único) ao elemento raiz imediatamente após cada map() resolveu.
+- Erro acima também ocorreu em ArtistsList, AlbumsList, GenresList e foi resolvido da mesma forma
+- Warning no arquivo do SpotifyIframe, reclama da função repeatedAction() estar fora do useEffect, porém movendo a função para dentro, mais dependências são pedidas para o array do useEffect. O warning sugere resolver com useCallback(), mas como não está 100% claro tal usabilidade, deixarei de fora por agora. O mesmo é válido para o warning em index.js
+- Warning consertado em que havia uma comparação com == ao invés de === no SpotifyIframe
+
+## Sprint 27/10: playlist inteligente "Recentemente modificados"
+
+- Dados já estão preparados pois um atributo de data de modificação já foi incluído junto com o data de criação em refatorações passadas
+- Por padrão serem filtrados as músicas modificadas nas últimas 24 horas
+
+## Sprint 27/10: playlist inteligente "Nunca tocadas"
+
+- Filtrar as músicas com zero reproduções, deve ser fácil e análogo à implementação de outras playlists pois o arcabouço necessário já está implementado
+
+## Sprint 27/10: playlist inteligente "Músicas com melhor classificação"
+
+- Para ser capaz de filtrar as músicas com melhor classificação, primeiro precisamos implementar uma forma do usuário atualizar sua classificação sobre as músicas. A melhor forma é utilizando estrelas de 0 a 5 como rating. O componente npm react-rating-stars-component facilita esse trabalho
+- Após ter as estrelas implementadas, de forma que o usuário possa clicar para alterar a classificação de uma música, basta buscar dentre no array de músicas totais da biblioteca qual a maior classificação e filtra todas com essa mesma classificação
+- A implementação da funcionalidade de rating deu muito mais trabalho que o esperado por conta das limitações do onChange das biblitecas de componentes de star rating (procurei outras no npm e todas apresentaram comportamento parecido). O componente de StarRating expõe através do onChange (quando se clica em uma estrela de classificação diferente da atual) apenas um callback que recebe um parâmetro "newRating" com o valor novo a ser alterado. Assim, não há como identificar o spotifyID da música que teve seu rating alterado.
+- Provavelmente todos componentes apresentam esse mesmo comportamento, pois espera-se uma maior modularização em React, ou seja, isso serviu para indicar que meu approach com um componente SongTable que renderizava toda a tabela de músicas não era o mais adequado. Aumentando a componentização, criando um componente SongTableRow para ficar responsável pela linha da tabela correspondente a uma única música foi o suficiente para conseguir passar o spotifyID como prop e ser capaz de salvar o newRating através do onChange
+- Com o arcabouço do sistema de ratings funcionando, implementar a rota deve ser uma tarefa fácil para filtrar as músicas melhores classificadas (de maior rating atualmente na biblioteca).
+- De fato, a implementação foi análoga às feitas anteriormente
 
 TODO: consertar bug de ser capaz de adicionar músicas repetidas
 TODO: fechar modal depois de adicionar uma música
@@ -204,4 +247,5 @@ TODO: limitação da biblioteca node-spotify-api: não é possível especificar 
 TODO: reorganizar os dados enviados pelo back-end por uma estrutura lógica
 TODO: thumbnail dos gêneros com uma API de imagem 640x640 coloridas com wordart do react-wordart
 
-TODO: fix bug onde uma música de 5 min e 5segundos (The Great Gig In the Sky - Live at Knebworth 1990	) aparece como 5:5 em vez de 5:05
+TODO: fix bug onde uma música de 5 min e 5segundos (The Great Gig In the Sky - Live at Knebworth 1990 ) aparece como 5:5 em vez de 5:05
+TODO: checar mais a fundo o problema dos warnings e testar useCallback()
