@@ -231,6 +231,41 @@
 - Com o arcabouço do sistema de ratings funcionando, implementar a rota deve ser uma tarefa fácil para filtrar as músicas melhores classificadas (de maior rating atualmente na biblioteca).
 - De fato, a implementação foi análoga às feitas anteriormente
 
+## Sprint 03/11: consertar problema variável ambiente do Netlify
+
+- Os deploys do front não estavam buildando pois a variável de ambiente CI estava como true por padrão, que impede a build em caso de warnings. Como os warnings em questão não impactam a funcionalidade da aplicação e podem ser suprimidos com comentários especiais no código, a variável CI foi configurada como false para permitir o build.
+
+## Sprint 03/11: backup da biblioteca
+
+- Botões de import e export colocados abaixo do ListGroupSection de Library, acima das opções de filtragem da biblioteca
+- Ícones de download e upload utilizados são fornecidos pelo Bootstrap. Para tornar o projeto o mais auto contido possível, foi copiado o svg que os gera. Para separar o ícone da label do button é necessário uma entidade HTML de espaço nbsp
+- Ao clicar em export, o usuário recebe o prompt de seu SO de onde deseja salvar o arquivo json com o conteúdo de songData da biblioteca.
+- O import é bem mais complexo que o export, pois requer o uso do FileReader e de um input field de tipo file. Como o comportamento desejado é clicar no botão de import e receber o prompt de seleção de arquivo do próprio SO, foi necessário um input field com classe d-none para se tornar invisível, porém mantendo sua funcionalidade com listeners do botão ativando comportamento do input e vice-versa. Ao detectar uma alteração no input field com onChange, a aplicação faz a leitura do arquivo carregado e invoca setSongData com a informação do JSON passado
+  - Implementação acima baseada em:
+    - https://medium.com/codex/use-a-button-to-upload-files-on-your-react-app-with-bootstrap-ef963cbe8280
+    - https://jsfiddle.net/Ln37kqc0/
+- Por enquanto o backup é funcional porém convém adicionar verificação se o arquivo enviado é válido ou não. Uma boa forma de garantir isso seria através do JWT (JSON Web Token) pois ao gerar com uma chave secreta, pode-se ter controle de que o arquivo que está sendo importado foi gerado pelo export do Spotunes
+
+## Sprint 03/11: criação de novas playlists
+
+- Por enquanto criação apenas de playlists não-inteligentes, ou seja, que contém apenas o título da Playlist
+- Como serão adicionados mais playlists na barra lateral, ela foi configurada para adicionar um scroll no overflow do seu tamanho original. Ademais, as novas playlists são colocadas no topo da lista, pois caso o usuário tenha muitas, já é capaz de identificar que a playlist foi criada adequadamente
+- Adição de um botão para criar uma nova playlist acima do ListGroup referentes a playlists, ao ser clicado abre um modal PlaylistCreationFormModal com o form de criação que pergunta pelo título que a playlist deve ter
+
+## Sprint 10/11: substituição da mensagem no campo de busca
+
+- Substituição de "Search" por "Add new song..." para indicar melhor que buscar ali permite incrementar na biblioteca
+
+## Sprint 10/11: adição dos botões de edição e remoção de playlist
+
+- Dentro de cada playlist foram adicionados botões para permitir edição e remoção
+- O botão de remoção pede uma confirmação com um popup do próprio navegador. Após a confirmação do usuário, filtra as playlists, restando apenas aquelas que não são a atual, finalmente atualizando o estado das playlists e redirecionando para a página inicial do Spotunes.
+- O botão de editar playlist abre um modal com o forms de edição da playlist. Foi criado um componente similar ao modal de criação de playlist, porém especializado na edição (que consiste em já carregar o valor atual do título da playlist no input, gerenciado através do useState do React. Ao digitar ou apagar no input, um campo onChange estabelece o novo valor do estado React, que serve como valor para o campo). Essa especialização do componente do modal de edição fez notar que havia um import desnecessário no modal de criação de playlist. O import foi removido.
+- O componente SongTable gerencia os botões de edição e remoção bem com suas respectivas funções a serem executadas ao serem clicados. Para obter o id da playlist, presente na rota, utilizar o hook useParams().
+- O hook useHistory é usado para redirecionar da rota atual da playlist deletada para a rota inicial da aplicação
+- Após a implementação inicial, a edição e deleção de playlists parecia funcionar corretamente, mas um bug estranho ocorre se forem adicionadas duas playlists com mesmo nome, a edição de uma delas provoca o surgimento de uma playlist fantasma que continua com o nome antigo. Provavelmente tem algo a ver com terem sido usados os titles como key da lista no React
+- O ListGroup de playlists agora recebe uma key mais adequada: os ids da playlist. O bug não tinha a ver com isso, mas sim estava faltando o useEffect receber a variável "currentPlaylist" para ficar de olho em alterações. Agora a funcionalidade de edição funciona normalmente.
+
 TODO: consertar bug de ser capaz de adicionar músicas repetidas
 TODO: fechar modal depois de adicionar uma música
 TODO: adicionar uuid a playlists e músicas
@@ -249,3 +284,13 @@ TODO: thumbnail dos gêneros com uma API de imagem 640x640 coloridas com wordart
 
 TODO: fix bug onde uma música de 5 min e 5segundos (The Great Gig In the Sky - Live at Knebworth 1990 ) aparece como 5:5 em vez de 5:05
 TODO: checar mais a fundo o problema dos warnings e testar useCallback()
+
+TODO: mostrar minutagem no footer sem ser em padrão decimal quando tem poucas musicas
+
+TODO: consertar ou suprimir warnings do React para permitir build com CI sendo true
+
+TODO: fazer verificações no JSON importado na biblioteca e verificar através do JWT com uma chave secreta se o arquivo foi de fato exportado pelo Spotunes ou não
+
+TODO: ao abrir o app o contador no footer está zerado
+
+TODO: ao deletar uma playlist e redirecionar para o /all, o ALl Songs está em branco não estando marcado na ListGroupSection
