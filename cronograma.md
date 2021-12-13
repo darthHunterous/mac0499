@@ -266,6 +266,65 @@
 - Após a implementação inicial, a edição e deleção de playlists parecia funcionar corretamente, mas um bug estranho ocorre se forem adicionadas duas playlists com mesmo nome, a edição de uma delas provoca o surgimento de uma playlist fantasma que continua com o nome antigo. Provavelmente tem algo a ver com terem sido usados os titles como key da lista no React
 - O ListGroup de playlists agora recebe uma key mais adequada: os ids da playlist. O bug não tinha a ver com isso, mas sim estava faltando o useEffect receber a variável "currentPlaylist" para ficar de olho em alterações. Agora a funcionalidade de edição funciona normalmente.
 
+## Sprint 10/11: funcionalidade dos botões do player
+
+- Remoção do slider de volume, pois não é possível controlar o volume das músicas pelo iframe ou browser, apenas seria possível caso fossem elementos audio do HTML5
+- A biblioteca 'react-player-controls' foi removida pois não contém um botão de stop, podendo ser facilmente substituída pelos ícones do bootstrap (a partir de código em svg para ficar auto-contido).
+- Sendo assim, o novo design dos botões do player conta com botões de pular música (para frente e para trás), que navegam através da seleção de músicas atual, de acordo com o índice e um botão de stop, que remove o iframe do Spotify atual, colocando o placeholder no lugar
+- Ao passar com o mouse em cima de um dos botões, o cursor do usuário se torna um pointer e o fundo dos botões se destaca, para sugerir o uso ao usuário
+- Para a funcionalidade de stop, o componente MusicPlayerControls precisa receber o estado playerSongID, que guarda a ID da música do Spotify para o elemento atual a ser mostrado no iframe
+
+## Sprint 17/11: pular para música seguinte ou anterior
+
+- Os botões de pular para música seguinte ou anterior se baseiam no estado currentSongIndex, que é inicializado com -1 e tem seu valor somado ou subtraído, de acordo com o botão clicado. Resulta em um fluxo cíclico entre a atual seleção de músicas mostradas (filteredSongData)
+- A música selecionada é mostrada no iframe e tem uma badge "Active" marcada na SongTable. O Badge não foi utilizado como componente do react-bootstrap pois há algum bug na biblioteca, que não está compilando o arquivo Badge.js. Utilizar a classe badge do Bootstrap convencional resolveu esse problema e o funcionamento é idêntico ao esperado. O bug não foi resolvido nem mesmo atualizando da versão 2.0.0 para 2.0.2 do react-bootstrap
+- Para tornar consistente, foi padronizado usar a filteredSongData para todas músicas listadas na SongTable, mesmo quando o filtro é o "/all". Assim o ciclo de pular música mantém-se funcional e consistente.
+- Ao clicar múltiplas vezes rapidamente no botão de pular música, o iframe acaba ficando "selecionado" em azul pelo browser, esse comportamento pode ser resolvido com a propriedade user-select no CSS, com valor none
+
+## Sprint 17/11: desabilitar warning
+
+- eslint-disable-next-line react-hooks/exhaustive-deps para remover o warning gerado no index.js em pages/Home, pois trata-se de uma dependência que não convém ser adicionada ao hook useEffect. Alterar de outra forma que eliminasse o warning resultaria em várias mudanças estruturais, pouco estratégicas no desenvolvimento da aplicação.
+
+## Sprint 17/11: badge de play
+
+- Cada SongTableRow tem uma badge de play que age como um botão, para configurar o iframe do Spotify com a música clicada. Ao ser clicado a badge se transforma em Active para o item atual
+
+## Sprint 17/11: sidebar com informações da música
+
+- Ao iniciar a aplicação, a sidebar mostra um warning, explicando que deve-se clicar na badge "Show" em alguma música da biblioteca para mostrar as informações na própria sidebar
+- Ao clicar em "Show" em alguma música, a sidebar passa a mostrar as ações disponíveis para a música atual (Adicionar a uma playlist, editar informações da música e deletar da biblioteca), junto com um card com as informações relevantes ao usuário (capa do álbum, nome da música, artista, nome do álbum, duração, data de criação e modificação, quantidade de reproduções e classificação)
+- Clicar no "Show" de uma música faz com que a aplicação busque o objeto em songData que contém o mesmo id do elemento clicado, adicionando o objeto encontrado ao estado do React que guarda a música selecionada
+- Um problema resolvido foi que a data armazenada no songData tanto para criação quanto modificação está em milissegundos desde 01/01/1970, por isso para mostrar um valor mais expressivo ao usuário (no formato "ano/mês/data", junto com o horário no formato "hora:minuto") foi criada a função formatDateString() para auxiliar na conversão
+
+## Sprint 17/11: componentização da song info sidebar
+
+- Criação do componente SongInfoSidebar para extrair a siderbar responsável pela informação das músicas, agregando os estados correspondentes e as funções auxiliares para melhorar a organização do código
+
+## Sprint 17/11: remoção do scroll horizontal inutilizado
+
+- As sidebars e a SongTable estavam com a propriedade de overflow atribuída como scroll, para criar barras de rolagem quando seu conteúdo não coubesse no espaço que lhes foi reservado, porém a propriedade overflow atribui um scroll horizontal, que ficava inutilizado e tomando espaço na tela. Isso é facilmente resolvido trocando por overflow-y, que cria apenas a barra de rolagem vertical, aproveitando melhor o espaço da tela para a aplicação.
+
+## Sprint 17/11: mover botão de adicionar playlist para dentro da SongInfoSidebar
+
+- Como a funcionalidade de adiçionar música à playlist já estava pronta, com o botão de adição em cada uma das SongTableRow, para mover para a SongInfoSidebar foi bastante simples, bastando mover a função de adição para dentro do novo componente e injetar as dependências dentro dele
+
+## Sprint 17/11: botão de deletar música dentro do SongInfoSidebar
+
+- Análogo ao botão de deletar playlist. Ao clicar nele, o usuário recebe uma confirmação do navegador para evitar deleções indesejadas. Caso confirme, um novo conjunto de songData é filtrado sem a música selecionada para deleção e songData recebe esse array filtrado como novo estado. Após isso o estado showInfoSong é resetado para seu valor padrão (objeto vazio), para que o componente SongInfoSidebar volte a mostrar o alert inicial.
+
+## Sprint 17/11: remoção do duplo clique para tocar música
+
+- Como agora temos a badge "Play" explicitamente indicada na interface, a funcionalidade de dar um duplo clique na SongTableRow de uma música para reproduzi-la, se torna problemática, pois há grande chance que o usuário efetue um duplo clique sem imaginar que teria esse efeito indesejado, removendo-o da reprodução atual.
+
+## Sprint 17/11: conserto de bug com funcionalidade de pular músicas
+
+- Ao navegar pelas músicas atualmente filtradas com as setas, o índice da música ativa atualmente não era alterado se pulássemos para uma outra música diferente com o botão de "Play", sendo assim, clicar posteriormente no botão de skip considerava esse índice anterior, quebrando a funcionalidade cíclica sequencial pretendida.
+- Para consertar isso, o estado currentSongIndex foi movido para fora do componente MusicPlayerControls, sendo gerenciado pelo index da aplicação. Assim, é possível passar o estado currentSongIndex para o component SongTableRow, para que currentSongIndex receba o índice de uma eventual música que tenha seu botão de "Play" clicado.
+
+## Sprint 17/11: compactação do botão de criar playlist
+
+- Como os ícones do Bootstrap em svg tomam um espaço padrão considerável, o botão "+ New Playlist" acabava quebrando uma linha desnecessariamente, para compactar e melhorar a interface da aplicação, tornando-a mais enxuta, o svg de "+" foi trocado pelo caracter "+" e agora o botão de criar playlist diz "+ Playlist" , cabendo em apenas uma linha
+
 TODO: consertar bug de ser capaz de adicionar músicas repetidas
 TODO: fechar modal depois de adicionar uma música
 TODO: adicionar uuid a playlists e músicas
@@ -294,3 +353,14 @@ TODO: fazer verificações no JSON importado na biblioteca e verificar através 
 TODO: ao abrir o app o contador no footer está zerado
 
 TODO: ao deletar uma playlist e redirecionar para o /all, o ALl Songs está em branco não estando marcado na ListGroupSection
+
+TODO: ao remover uma música da playlist editando as checkboxes, atualizar o componente da playlist atual
+
+TODO: botão edit em SongInfoSidebar
+TODO: clicar em skip para trás ou frente não reseta o songplayed e portanto contagem de reproduções não sobe corretamente
+
+dickerizar os 2 juntos e facilitar deploy no heroku
+começar monografia
+lembrar de dar um relato sobre pq eu preferiria fazer em Angular do que react
+questionário para usuários do spotunes
+checar vlc player no android
