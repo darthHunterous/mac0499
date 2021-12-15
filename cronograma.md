@@ -326,22 +326,29 @@
 - Como os ícones do Bootstrap em svg tomam um espaço padrão considerável, o botão "+ New Playlist" acabava quebrando uma linha desnecessariamente, para compactar e melhorar a interface da aplicação, tornando-a mais enxuta, o svg de "+" foi trocado pelo caracter "+" e agora o botão de criar playlist diz "+ Playlist" , cabendo em apenas uma linha
 
 TODO: consertar bug de ser capaz de adicionar músicas repetidas
+
 TODO: fechar modal depois de adicionar uma música
+
 TODO: adicionar uuid a playlists e músicas
 
 TODO: finalizar tudo que já tem na interface (criar playlists, playlists inteligentes, informações da barra lateral direita)
+
 TODO: fazer um readme de como fazer deploy no heroku
 
 TODO: adicionar /videos ao ListGroup Library novamente
+
 TODO: consertar reload, que sempre acaba marcando all songs junto com o path atual
 
 TODO: adicionar número da música no álbum para ordenar (track_number na API do Spotify)
+
 TODO: limitação da biblioteca node-spotify-api: não é possível especificar um mercado para os álbums, assim podem haver repetidos, como o Enema of The State do Blink-182 usado nos testes
 
 TODO: reorganizar os dados enviados pelo back-end por uma estrutura lógica
+
 TODO: thumbnail dos gêneros com uma API de imagem 640x640 coloridas com wordart do react-wordart
 
 TODO: fix bug onde uma música de 5 min e 5segundos (The Great Gig In the Sky - Live at Knebworth 1990 ) aparece como 5:5 em vez de 5:05
+
 TODO: checar mais a fundo o problema dos warnings e testar useCallback()
 
 TODO: mostrar minutagem no footer sem ser em padrão decimal quando tem poucas musicas
@@ -357,10 +364,9 @@ TODO: ao deletar uma playlist e redirecionar para o /all, o ALl Songs está em b
 TODO: ao remover uma música da playlist editando as checkboxes, atualizar o componente da playlist atual
 
 TODO: botão edit em SongInfoSidebar
+
 TODO: clicar em skip para trás ou frente não reseta o songplayed e portanto contagem de reproduções não sobe corretamente
 
-dickerizar os 2 juntos e facilitar deploy no heroku
-começar monografia
-lembrar de dar um relato sobre pq eu preferiria fazer em Angular do que react
-questionário para usuários do spotunes
-checar vlc player no android
+TODO: dickerizar os 2 juntos e facilitar deploy no heroku
+
+TODO: lembrar de dar um relato sobre pq eu preferiria fazer em Angular do que react
